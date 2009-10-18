@@ -25,7 +25,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::QtRt)
 {
     ui->setupUi(this);
 }

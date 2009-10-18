@@ -1,5 +1,5 @@
 /*****************************************************************************
- * mainwindow.h: QtRt Main Window
+ * scene.cpp: Scene class
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -20,26 +20,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
  *****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
 
-#include <QMainWindow>
+#include "scene.h"
 
-namespace Ui {
-    class QtRt;
+Scene::Scene()
+{
+    m_camera = new QVector3D();
+    m_objects = new QList<Object*>();
 }
 
-class MainWindow : public QMainWindow {
-    Q_OBJECT
-public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-
-protected:
-    void changeEvent(QEvent *e);
-
-private:
-    Ui::QtRt *ui;
-};
-
-#endif // MAINWINDOW_H
+Scene::~Scene()
+{
+    delete m_camera;
+    delete m_objects;
+}
