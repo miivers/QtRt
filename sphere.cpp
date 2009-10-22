@@ -1,5 +1,5 @@
 /*****************************************************************************
- * mainwindow.cpp: QtRt Main Window
+ * sphere.cpp: Sphere primitive class
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -20,45 +20,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
  *****************************************************************************/
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include <QtDebug>
 
-#include "scene.h"
 #include "sphere.h"
+#include <math.h>
 
-#include <QImage>
-
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::QtRt)
+Sphere::Sphere( qreal xPos, qreal yPos, qreal zPos, qreal rayon ) :
+        Primitive( xPos, yPos, zPos )
 {
-    ui->setupUi(this);
-    renderScene();
+    m_rayon = rayon;
 }
 
-MainWindow::~MainWindow()
+Sphere::~Sphere()
 {
-    delete ui;
+
 }
 
-void MainWindow::changeEvent(QEvent *e)
+qreal Sphere::intersect( Ray* ray )
 {
-    QMainWindow::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
-}
-
-void    MainWindow::renderScene()
-{
-    QImage* image;
-    Scene* scene = new Scene();
-    scene->setCamera( -1000, 0, 0 );
-    scene->addPrimitive( new Sphere(0, 0, 0, 100) );
-    image = scene->render();
-    ui->label->setPixmap( QPixmap::fromImage( *image ) );
+    qreal a = pow( ray->getDirection()->x(), 2 ) +
+              pow( ray->getDirection()->y(), 2 ) +
+              pow( ray->getDirection()->z(), 2 );
+    qreal b = 2 * ( ray->getOrigin()->x() * ray->getDirection()->x() +
+                    ray->getOrigin()->y() * ray->getDirection()->y() +
+                    ray->getOrigin()->z() * ray->getDirection()->z() );
+    qreal c = pow( ray->getOrigin()->x(), 2 ) +
+              pow( ray->getOrigin()->y(), 2 ) +
+              pow( ray->getOrigin()->z(), 2 ) - pow( m_rayon, 2 );
+    qreal delta = pow( b, 2 ) - 4 * a * c;
+    if (delta < 0)
+        return -1;
+    qreal distance1 = (b * -1) - sqrt( delta ) / 2 * a;
+    qreal distance2 = (b * -1) + sqrt( delta ) / 2 * a;
+    return ( distance2 > distance1 && distance1 > 0 ? distance1 : distance2 );
 }

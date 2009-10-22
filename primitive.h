@@ -1,5 +1,5 @@
 /*****************************************************************************
- * scene.h: Scene Class
+ * primitive.h: Primitive Class
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -21,34 +21,25 @@
  *****************************************************************************/
 
 
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef PRIMITIVE_H
+#define PRIMITIVE_H
 
-#include <QList>
 #include <QVector3D>
-#include <QImage>
+#include <QColor>
 
-#include "primitive.h"
+#include "ray.h"
 
-class Scene
+class Primitive
 {
 public:
-    Scene();
-    ~Scene();
+    Primitive( qreal xPos, qreal yPos, qreal zPos );
+    virtual ~Primitive();
 
-    const QVector3D*    camera() const { return m_camera; }
-    qreal               depth() const { return m_depth; }
-    int                 XResolution() const { return m_Xresolution; }
-    int                 YResolution() const { return m_Yresolution; }
-    void                setCamera( qreal, qreal, qreal );
-    void                setResolution( int x, int y );
-    QImage*             render();
-    void                addPrimitive( Primitive* );
-private:
-    QList<Primitive*>*  m_primitives;
-    QVector3D*          m_camera;
-    int                 m_Xresolution, m_Yresolution;
-    qreal               m_depth;
+    virtual qreal   intersect( Ray* ray ) = 0;
+    QColor          getColor() const { return m_color; }
+protected:
+    QVector3D*      m_position;
+    QColor          m_color;
 };
 
-#endif // SCENE_H
+#endif // PRIMITIVE_H

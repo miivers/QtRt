@@ -35,6 +35,8 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void    renderScene();
+
 protected:
     void changeEvent(QEvent *e);
 

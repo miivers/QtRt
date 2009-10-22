@@ -1,7 +1,7 @@
 /*****************************************************************************
- * file.cpp: File Description
+ * ray.h: Ray class
  *****************************************************************************
- * Copyright (C) 2008-2009 
+ * Copyright (C) 2008-2009
  *
  * Authors: Christophe Courtaut <christophe.courtaut@gmail.com>
  *
@@ -21,8 +21,28 @@
  *****************************************************************************/
 
 
-#include "object.h"
+#ifndef RAY_H
+#define RAY_H
 
-Object::Object()
+#include <QVector3D>
+
+class Scene;
+
+class Ray
 {
-}
+public:
+    Ray();
+    Ray( QVector3D*, QVector3D* );
+    ~Ray();
+
+    void                setOrigin( QVector3D* );
+    void                setDirection( QVector3D* );
+    const QVector3D*    getOrigin() const;
+    const QVector3D*    getDirection() const;
+    static Ray*         getRay( Scene* scene, qreal x, qreal y );
+private:
+    QVector3D*  m_origin;
+    QVector3D*  m_direction;
+};
+
+#endif // RAY_H

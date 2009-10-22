@@ -1,5 +1,5 @@
 /*****************************************************************************
- * scene.h: Scene Class
+ * sphere.h: Sphere primitive class
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -21,34 +21,20 @@
  *****************************************************************************/
 
 
-#ifndef SCENE_H
-#define SCENE_H
-
-#include <QList>
-#include <QVector3D>
-#include <QImage>
+#ifndef SPHERE_H
+#define SPHERE_H
 
 #include "primitive.h"
 
-class Scene
+class Sphere : public Primitive
 {
 public:
-    Scene();
-    ~Scene();
+    Sphere( qreal xPos, qreal yPos, qreal zPos, qreal rayon );
+    virtual ~Sphere();
 
-    const QVector3D*    camera() const { return m_camera; }
-    qreal               depth() const { return m_depth; }
-    int                 XResolution() const { return m_Xresolution; }
-    int                 YResolution() const { return m_Yresolution; }
-    void                setCamera( qreal, qreal, qreal );
-    void                setResolution( int x, int y );
-    QImage*             render();
-    void                addPrimitive( Primitive* );
+    qreal   intersect( Ray* ray );
 private:
-    QList<Primitive*>*  m_primitives;
-    QVector3D*          m_camera;
-    int                 m_Xresolution, m_Yresolution;
-    qreal               m_depth;
+    qreal   m_rayon;
 };
 
-#endif // SCENE_H
+#endif // SPHERE_H

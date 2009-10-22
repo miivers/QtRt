@@ -1,7 +1,7 @@
 /*****************************************************************************
- * file.cpp: File Description
+ * primitive.cpp: Primitive Class
  *****************************************************************************
- * Copyright (C) 2008-2009 
+ * Copyright (C) 2008-2009
  *
  * Authors: Christophe Courtaut <christophe.courtaut@gmail.com>
  *
@@ -21,13 +21,15 @@
  *****************************************************************************/
 
 
-#ifndef OBJECT_H
-#define OBJECT_H
+#include "primitive.h"
 
-class Object
+Primitive::Primitive( qreal xPos, qreal yPos, qreal zPos )
 {
-public:
-    Object();
-};
+    m_position = new QVector3D( xPos, yPos, zPos );
+    m_color = QColor(Qt::red);
+}
 
-#endif // OBJECT_H
+Primitive::~Primitive()
+{
+    delete m_position;
+}

@@ -6,8 +6,12 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     scene.cpp \
-    object.cpp
+    primitive.cpp \
+    sphere.cpp \
+    ray.cpp
 HEADERS += mainwindow.h \
     scene.h \
-    object.h
+    primitive.h \
+    sphere.h \
+    ray.h
 FORMS += mainwindow.ui
