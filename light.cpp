@@ -1,5 +1,5 @@
 /*****************************************************************************
- * primitive.h: Primitive Class
+ * file.cpp: File Description
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -21,36 +21,15 @@
  *****************************************************************************/
 
 
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
+#include "light.h"
 
-#include <QVector3D>
-#include <QMatrix4x4>
-#include <QColor>
-
-#include "ray.h"
-
-#define ZERO    0.0000000001
-
-class Primitive
+Light::Light( qreal x, qreal y, qreal z, QColor color )
 {
-public:
-    Primitive( qreal xPos, qreal yPos, qreal zPos,
-               qreal xRotation, qreal yRotation, qreal zRotation );
-    virtual ~Primitive();
+    m_position = new QVector3D( x, y, z );
+    m_color = color;
+}
 
-    virtual qreal   intersect( Ray* ray ) = 0;
-    const QVector3D* position() { return m_position; }
-    QColor          color() const { return m_color; }
-    const QString   name() const { return m_name; }
-    QVector3D*      realOrigin( Ray* ray );
-    virtual QVector3D*      normal( QVector3D* intersect ) = 0;
-    QMatrix4x4*     rotationMatrix();
-protected:
-    QVector3D*      m_position;
-    QMatrix4x4*     m_rotationMatrix;
-    QColor          m_color;
-    QString         m_name;
-};
-
-#endif // PRIMITIVE_H
+Light::~Light()
+{
+    delete m_position;
+}

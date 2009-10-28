@@ -32,7 +32,8 @@ public:
     Sphere( qreal xPos, qreal yPos, qreal zPos, qreal rayon );
     virtual ~Sphere();
 
-    qreal   intersect( Ray* ray );
+    qreal       intersect( Ray* ray );
+    QVector3D*  normal( QVector3D* intersect );
 private:
     qreal   m_rayon;
 };

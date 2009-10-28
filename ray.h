@@ -37,11 +37,14 @@ public:
 
     void                setOrigin( QVector3D* );
     void                setDirection( QVector3D* );
-    const QVector3D*    getOrigin() const;
-    const QVector3D*    getDirection() const;
+    void                setRealDirection( QVector3D* );
+    const QVector3D*    origin() const;
+    const QVector3D*    realDirection() const;
+    QVector3D*          direction();
     static Ray*         getRay( Scene* scene, qreal x, qreal y );
 private:
     QVector3D*  m_origin;
+    QVector3D*  m_realDirection;
     QVector3D*  m_direction;
 };
 

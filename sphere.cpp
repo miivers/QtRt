@@ -26,9 +26,11 @@
 #include <math.h>
 
 Sphere::Sphere( qreal xPos, qreal yPos, qreal zPos, qreal rayon ) :
-        Primitive( xPos, yPos, zPos )
+        Primitive( xPos, yPos, zPos , 0, 0, 0)
 {
+    m_color = Qt::red;
     m_rayon = rayon;
+    m_name = "Sphere";
 }
 
 Sphere::~Sphere()
@@ -38,19 +40,30 @@ Sphere::~Sphere()
 
 qreal Sphere::intersect( Ray* ray )
 {
-    qreal a = pow( ray->getDirection()->x(), 2 ) +
-              pow( ray->getDirection()->y(), 2 ) +
-              pow( ray->getDirection()->z(), 2 );
-    qreal b = 2 * ( ray->getOrigin()->x() * ray->getDirection()->x() +
-                    ray->getOrigin()->y() * ray->getDirection()->y() +
-                    ray->getOrigin()->z() * ray->getDirection()->z() );
-    qreal c = pow( ray->getOrigin()->x(), 2 ) +
-              pow( ray->getOrigin()->y(), 2 ) +
-              pow( ray->getOrigin()->z(), 2 ) - pow( m_rayon, 2 );
-    qreal delta = pow( b, 2 ) - 4 * a * c;
-    if (delta < 0)
+    QVector3D* origin = realOrigin( ray );
+    qreal a = pow( ray->direction()->x(), 2 ) +
+              pow( ray->direction()->y(), 2 ) +
+              pow( ray->direction()->z(), 2 );
+    qreal b = 2.0 * ( origin->x() * ray->direction()->x() +
+                    origin->y() * ray->direction()->y() +
+                    origin->z() * ray->direction()->z() );
+    qreal c = pow( origin->x(), 2 ) +
+              pow( origin->y(), 2 ) +
+              pow( origin->z(), 2 ) - pow( m_rayon, 2 );
+    qreal delta = pow( b, 2 ) - 4.0 * a * c;
+    delete origin;
+    if ( delta < ZERO )
         return -1;
-    qreal distance1 = (b * -1) - sqrt( delta ) / 2 * a;
-    qreal distance2 = (b * -1) + sqrt( delta ) / 2 * a;
-    return ( distance2 > distance1 && distance1 > 0 ? distance1 : distance2 );
+    qreal distance1 = ( -b - sqrt( delta ) ) / ( 2.0 * a );
+    qreal distance2 = ( -b + sqrt( delta ) ) / ( 2.0 * a );
+    if ( distance1 > ZERO && distance1 < distance2 )
+        return distance1;
+    if ( distance2 > ZERO )
+        return distance2;
+    return -1;
+}
+
+QVector3D*  Sphere::normal( QVector3D* intersect )
+{
+    return new QVector3D( *intersect );
 }

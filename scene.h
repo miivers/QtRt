@@ -29,6 +29,7 @@
 #include <QImage>
 
 #include "primitive.h"
+#include "light.h"
 
 class Scene
 {
@@ -37,16 +38,21 @@ public:
     ~Scene();
 
     const QVector3D*    camera() const { return m_camera; }
+    const QMatrix4x4*   rotationMatrix() { return m_rotationCamera; }
     qreal               depth() const { return m_depth; }
     int                 XResolution() const { return m_Xresolution; }
     int                 YResolution() const { return m_Yresolution; }
     void                setCamera( qreal, qreal, qreal );
     void                setResolution( int x, int y );
     QImage*             render();
+    void                renderPixel(QImage* image, qreal x, qreal y);
     void                addPrimitive( Primitive* );
+    void                addLight( Light* );
 private:
     QList<Primitive*>*  m_primitives;
+    QList<Light*>*      m_lights;
     QVector3D*          m_camera;
+    QMatrix4x4*         m_rotationCamera;
     int                 m_Xresolution, m_Yresolution;
     qreal               m_depth;
 };

@@ -8,10 +8,14 @@ SOURCES += main.cpp \
     scene.cpp \
     primitive.cpp \
     sphere.cpp \
-    ray.cpp
+    ray.cpp \
+    plan.cpp \
+    light.cpp
 HEADERS += mainwindow.h \
     scene.h \
     primitive.h \
     sphere.h \
-    ray.h
+    ray.h \
+    plan.h \
+    light.h
 FORMS += mainwindow.ui

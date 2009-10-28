@@ -1,5 +1,5 @@
 /*****************************************************************************
- * primitive.h: Primitive Class
+ * plan.cpp: Plan primitive class
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -21,36 +21,23 @@
  *****************************************************************************/
 
 
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
+#include "plan.h"
 
-#include <QVector3D>
-#include <QMatrix4x4>
-#include <QColor>
-
-#include "ray.h"
-
-#define ZERO    0.0000000001
-
-class Primitive
+Plan::Plan( qreal xPos, qreal yPos, qreal zPos ) :
+    Primitive( xPos, yPos, zPos, 0, 0, 0)
 {
-public:
-    Primitive( qreal xPos, qreal yPos, qreal zPos,
-               qreal xRotation, qreal yRotation, qreal zRotation );
-    virtual ~Primitive();
+    m_color = QColor( Qt::blue );
+    m_name  = "Plan";
+}
 
-    virtual qreal   intersect( Ray* ray ) = 0;
-    const QVector3D* position() { return m_position; }
-    QColor          color() const { return m_color; }
-    const QString   name() const { return m_name; }
-    QVector3D*      realOrigin( Ray* ray );
-    virtual QVector3D*      normal( QVector3D* intersect ) = 0;
-    QMatrix4x4*     rotationMatrix();
-protected:
-    QVector3D*      m_position;
-    QMatrix4x4*     m_rotationMatrix;
-    QColor          m_color;
-    QString         m_name;
-};
+qreal   Plan::intersect( Ray* ray )
+{
+    if ( ray->direction()->z() == 0.0 )
+        return -1;
+    return - ray->origin()->z() / ray->direction()->z();
+}
 
-#endif // PRIMITIVE_H
+QVector3D*  Plan::normal( QVector3D* intersect )
+{
+    return new QVector3D( 0.0, 0.0, 100.0 );
+}

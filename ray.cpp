@@ -25,13 +25,14 @@
 
 #include "scene.h"
 
-Ray::Ray() : m_origin( NULL ), m_direction( NULL )
+Ray::Ray() : m_origin( NULL ), m_realDirection( NULL ),m_direction( NULL )
 {
 }
 
 Ray::Ray( QVector3D* origin, QVector3D* direction ) :
-        m_origin( origin ), m_direction( direction )
+        m_origin( origin ), m_realDirection( direction )
 {
+    m_direction = new QVector3D();
 }
 
 Ray::~Ray()
@@ -40,6 +41,8 @@ Ray::~Ray()
         delete m_origin;
     if ( m_direction )
         delete m_direction;
+    if ( m_realDirection )
+        delete m_realDirection;
 }
 
 void                Ray::setOrigin( QVector3D* origin )
@@ -56,12 +59,24 @@ void                Ray::setDirection( QVector3D* direction )
     m_direction = direction;
 }
 
-const QVector3D*    Ray::getOrigin() const
+void                Ray::setRealDirection( QVector3D* direction )
+{
+    if ( m_realDirection )
+        delete m_realDirection;
+    m_realDirection = direction;
+}
+
+const QVector3D*    Ray::origin() const
 {
     return m_origin;
 }
 
-const QVector3D*    Ray::getDirection() const
+const QVector3D*    Ray::realDirection() const
+{
+    return m_realDirection;
+}
+
+QVector3D*    Ray::direction()
 {
     return m_direction;
 }
@@ -70,10 +85,11 @@ Ray*                Ray::getRay( Scene* scene, qreal x, qreal y )
 {
     Ray* ray = new Ray();
     ray->setOrigin( new QVector3D( *( scene->camera() ) ) );
-    ray->setDirection( new QVector3D( scene->depth() + scene->camera()->x(),
-                                      scene->XResolution() / 2 - x +
-                                      scene->camera()->y(),
-                                      scene->YResolution() / 2 - y +
-                                      scene->camera()->z() ) );
+    ray->setRealDirection( new QVector3D( QVector3D( scene->depth(),
+                                      scene->XResolution() / 2 - x ,
+                                      scene->YResolution() / 2 - y ) * *scene->rotationMatrix() ) );
+    ray->setDirection( new QVector3D( *ray->realDirection() ) );
+    ray->m_direction->normalize();
+    ray->m_realDirection->normalize();
     return ray;
 }

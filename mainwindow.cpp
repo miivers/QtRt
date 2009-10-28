@@ -25,6 +25,7 @@
 
 #include "scene.h"
 #include "sphere.h"
+#include "plan.h"
 
 #include <QImage>
 
@@ -33,7 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::QtRt)
 {
     ui->setupUi(this);
-    renderScene();
+    connect(ui->actionRender, SIGNAL(triggered()), this, SLOT(renderScene()));
+    //renderScene();
 }
 
 MainWindow::~MainWindow()
@@ -57,8 +59,10 @@ void    MainWindow::renderScene()
 {
     QImage* image;
     Scene* scene = new Scene();
-    scene->setCamera( -1000, 0, 0 );
-    scene->addPrimitive( new Sphere(0, 0, 0, 100) );
+    scene->setCamera( -3000, 0, 300 );
+    scene->addPrimitive( new Sphere(0, 0, 0, 200) );
+    scene->addPrimitive( new Plan( 0, 0, 0 ) );
+    scene->addLight( new Light(-100, -50, 100, Qt::yellow ) );
     image = scene->render();
     ui->label->setPixmap( QPixmap::fromImage( *image ) );
 }

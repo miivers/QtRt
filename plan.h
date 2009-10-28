@@ -1,5 +1,5 @@
 /*****************************************************************************
- * primitive.h: Primitive Class
+ * file.cpp: File Description
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -21,36 +21,19 @@
  *****************************************************************************/
 
 
-#ifndef PRIMITIVE_H
-#define PRIMITIVE_H
+#ifndef PLAN_H
+#define PLAN_H
 
-#include <QVector3D>
-#include <QMatrix4x4>
-#include <QColor>
-
+#include "primitive.h"
 #include "ray.h"
 
-#define ZERO    0.0000000001
-
-class Primitive
+class Plan : public Primitive
 {
 public:
-    Primitive( qreal xPos, qreal yPos, qreal zPos,
-               qreal xRotation, qreal yRotation, qreal zRotation );
-    virtual ~Primitive();
+    Plan( qreal xPos, qreal yPos, qreal zPos );
 
-    virtual qreal   intersect( Ray* ray ) = 0;
-    const QVector3D* position() { return m_position; }
-    QColor          color() const { return m_color; }
-    const QString   name() const { return m_name; }
-    QVector3D*      realOrigin( Ray* ray );
-    virtual QVector3D*      normal( QVector3D* intersect ) = 0;
-    QMatrix4x4*     rotationMatrix();
-protected:
-    QVector3D*      m_position;
-    QMatrix4x4*     m_rotationMatrix;
-    QColor          m_color;
-    QString         m_name;
+    qreal       intersect( Ray* ray );
+    QVector3D*  normal( QVector3D* intersect );
 };
 
-#endif // PRIMITIVE_H
+#endif // PLAN_H
