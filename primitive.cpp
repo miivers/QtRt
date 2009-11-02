@@ -43,14 +43,7 @@ Primitive::~Primitive()
     delete m_rotationMatrix;
 }
 
-QVector3D*  Primitive::realOrigin( Ray* ray )
+QMatrix4x4& Primitive::rotationMatrix()
 {
-    return ( new QVector3D( ray->origin()->x() + m_position->x(),
-                            ray->origin()->y() + m_position->y(),
-                            ray->origin()->z() + m_position->z()) );
-}
-
-QMatrix4x4* Primitive::rotationMatrix()
-{
-    return m_rotationMatrix;
+    return *m_rotationMatrix;
 }

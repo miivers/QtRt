@@ -48,8 +48,10 @@ public:
     void                renderPixel(QImage* image, qreal x, qreal y);
     void                addPrimitive( Primitive* );
     void                addLight( Light* );
+    void                getFirstIntersect( Ray& ray, IntersectionInfo& info );
+    void                renderLight( Ray& ray, IntersectionInfo& info );
 private:
-    QList<Primitive*>*  m_primitives;
+    QList<Primitive*>&  m_primitives;
     QList<Light*>*      m_lights;
     QVector3D*          m_camera;
     QMatrix4x4*         m_rotationCamera;

@@ -30,9 +30,8 @@ Ray::Ray() : m_origin( NULL ), m_realDirection( NULL ),m_direction( NULL )
 }
 
 Ray::Ray( QVector3D* origin, QVector3D* direction ) :
-        m_origin( origin ), m_realDirection( direction )
+        m_origin( origin ), m_direction( direction )
 {
-    m_direction = new QVector3D();
 }
 
 Ray::~Ray()
@@ -41,8 +40,6 @@ Ray::~Ray()
         delete m_origin;
     if ( m_direction )
         delete m_direction;
-    if ( m_realDirection )
-        delete m_realDirection;
 }
 
 void                Ray::setOrigin( QVector3D* origin )
@@ -59,37 +56,23 @@ void                Ray::setDirection( QVector3D* direction )
     m_direction = direction;
 }
 
-void                Ray::setRealDirection( QVector3D* direction )
+const QVector3D&    Ray::origin() const
 {
-    if ( m_realDirection )
-        delete m_realDirection;
-    m_realDirection = direction;
+    return *m_origin;
 }
 
-const QVector3D*    Ray::origin() const
+const QVector3D&    Ray::direction() const
 {
-    return m_origin;
-}
-
-const QVector3D*    Ray::realDirection() const
-{
-    return m_realDirection;
-}
-
-QVector3D*    Ray::direction()
-{
-    return m_direction;
+    return *m_direction;
 }
 
 Ray*                Ray::getRay( Scene* scene, qreal x, qreal y )
 {
     Ray* ray = new Ray();
     ray->setOrigin( new QVector3D( *( scene->camera() ) ) );
-    ray->setRealDirection( new QVector3D( QVector3D( scene->depth(),
+    ray->setDirection( new QVector3D( QVector3D( scene->depth(),
                                       scene->XResolution() / 2 - x ,
                                       scene->YResolution() / 2 - y ) * *scene->rotationMatrix() ) );
-    ray->setDirection( new QVector3D( *ray->realDirection() ) );
     ray->m_direction->normalize();
-    ray->m_realDirection->normalize();
     return ray;
 }

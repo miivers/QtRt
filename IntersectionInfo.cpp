@@ -1,5 +1,5 @@
 /*****************************************************************************
- * sphere.h: Sphere primitive class
+ * file.cpp: File Description
  *****************************************************************************
  * Copyright (C) 2008-2009
  *
@@ -21,21 +21,19 @@
  *****************************************************************************/
 
 
-#ifndef SPHERE_H
-#define SPHERE_H
+#include "IntersectionInfo.h"
 
-#include "primitive.h"
+#include <float.h>
 
-class Sphere : public Primitive
+IntersectionInfo::IntersectionInfo() :
+        hit( false ), primitive( NULL ), position( NULL ), normal( NULL ), distance( DBL_MAX )
 {
-public:
-    Sphere( qreal xPos, qreal yPos, qreal zPos, qreal rayon );
-    virtual ~Sphere();
+}
 
-    void        intersect( Ray& ray, IntersectionInfo& info );
-    QVector3D*  normal( QVector3D* intersect );
-private:
-    qreal   m_rayon;
-};
-
-#endif // SPHERE_H
+IntersectionInfo::~IntersectionInfo()
+{
+    if ( position )
+        delete position;
+    if ( normal )
+        delete normal;
+}

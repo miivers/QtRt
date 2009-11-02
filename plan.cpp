@@ -30,11 +30,15 @@ Plan::Plan( qreal xPos, qreal yPos, qreal zPos ) :
     m_name  = "Plan";
 }
 
-qreal   Plan::intersect( Ray* ray )
+void   Plan::intersect( Ray& ray, IntersectionInfo& info )
 {
-    if ( ray->direction()->z() == 0.0 )
-        return -1;
-    return - ray->origin()->z() / ray->direction()->z();
+    if ( ray.direction().z() == 0.0 )
+        info.hit = false;
+    else
+    {
+        info.distance = - ray.origin().z() / ray.direction().z();
+        info.hit = true;
+    }
 }
 
 QVector3D*  Plan::normal( QVector3D* intersect )

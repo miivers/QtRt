@@ -38,29 +38,30 @@ Sphere::~Sphere()
 
 }
 
-qreal Sphere::intersect( Ray* ray )
+void Sphere::intersect( Ray& ray, IntersectionInfo& info )
 {
-    QVector3D* origin = realOrigin( ray );
-    qreal a = pow( ray->direction()->x(), 2 ) +
-              pow( ray->direction()->y(), 2 ) +
-              pow( ray->direction()->z(), 2 );
-    qreal b = 2.0 * ( origin->x() * ray->direction()->x() +
-                    origin->y() * ray->direction()->y() +
-                    origin->z() * ray->direction()->z() );
-    qreal c = pow( origin->x(), 2 ) +
-              pow( origin->y(), 2 ) +
-              pow( origin->z(), 2 ) - pow( m_rayon, 2 );
+    qreal a = pow( ray.direction().x(), 2 ) +
+              pow( ray.direction().y(), 2 ) +
+              pow( ray.direction().z(), 2 );
+    qreal b = 2.0 * ( ray.origin().x() * ray.direction().x() +
+                    ray.origin().y() * ray.direction().y() +
+                    ray.origin().z() * ray.direction().z() );
+    qreal c = pow( ray.origin().x(), 2 ) +
+              pow( ray.origin().y(), 2 ) +
+              pow( ray.origin().z(), 2 ) - pow( m_rayon, 2 );
     qreal delta = pow( b, 2 ) - 4.0 * a * c;
-    delete origin;
-    if ( delta < ZERO )
-        return -1;
-    qreal distance1 = ( -b - sqrt( delta ) ) / ( 2.0 * a );
-    qreal distance2 = ( -b + sqrt( delta ) ) / ( 2.0 * a );
-    if ( distance1 > ZERO && distance1 < distance2 )
-        return distance1;
-    if ( distance2 > ZERO )
-        return distance2;
-    return -1;
+    if ( delta >= ZERO )
+    {
+        qreal distance1 = ( -b - sqrt( delta ) ) / ( 2.0 * a );
+        qreal distance2 = ( -b + sqrt( delta ) ) / ( 2.0 * a );
+        if ( distance1 > ZERO && distance1 < distance2 )
+            info.distance = distance1;
+        else
+            info.distance = distance2;
+        info.hit = true;
+    }
+    else
+        info.hit = false;
 }
 
 QVector3D*  Sphere::normal( QVector3D* intersect )

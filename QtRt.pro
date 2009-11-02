@@ -10,12 +10,14 @@ SOURCES += main.cpp \
     sphere.cpp \
     ray.cpp \
     plan.cpp \
-    light.cpp
+    light.cpp \
+    IntersectionInfo.cpp
 HEADERS += mainwindow.h \
     scene.h \
     primitive.h \
     sphere.h \
     ray.h \
     plan.h \
-    light.h
+    light.h \
+    IntersectionInfo.h
 FORMS += mainwindow.ui

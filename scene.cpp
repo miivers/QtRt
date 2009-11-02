@@ -28,7 +28,7 @@
 
 #include "scene.h"
 
-Scene::Scene()
+Scene::Scene() : m_primitives( *new QList<Primitive*>() )
 {
     m_camera = new QVector3D(0, 0, 0);
     m_rotationCamera = new QMatrix4x4();
@@ -40,15 +40,14 @@ Scene::Scene()
     m_depth = 1000;
     m_Xresolution = 800;
     m_Yresolution = 600;
-    m_primitives = new QList<Primitive*>();
     m_lights = new QList<Light*>();
 }
 
 Scene::~Scene()
 {
     delete m_camera;
-    delete m_primitives;
     delete m_lights;
+    delete &m_primitives;
 }
 
 void    Scene::setCamera( qreal x, qreal y, qreal z )
@@ -66,7 +65,7 @@ void    Scene::setResolution( int x, int y )
 
 void    Scene::addPrimitive( Primitive* primitive )
 {
-    m_primitives->append( primitive );
+    m_primitives.append( primitive );
 }
 
 void    Scene::addLight( Light* light )
@@ -92,64 +91,43 @@ QImage* Scene::render()
 
 void    Scene::renderPixel( QImage* image, qreal x, qreal y )
 {
-    qreal distance = DBL_MAX;
-    qreal result = -1;
-    Primitive*  primitive = NULL;
-    int index = 0;
-    int counter = m_primitives->count();
+    IntersectionInfo info;
     Ray* ray = Ray::getRay( this, x, y );
-
     image->setPixel(x, y, Qt::black);
+    getFirstIntersect( *ray, info );
+    if ( info.hit )
+    {
+        image->setPixel( x, y, info.primitive->color().rgb() );
+    }
+    delete ray;
+}
+
+void    Scene::getFirstIntersect( Ray& ray, IntersectionInfo& info )
+{
+    IntersectionInfo result;
+
+    int index = 0;
+    int counter = m_primitives.count();
+    info.hit = false;
+    info.distance = DBL_MAX;
+    info.primitive = NULL;
     while ( index < counter )
     {
-        ray->setDirection( new QVector3D( ( *ray->realDirection() ) *
-                                          ( * ( ( *m_primitives )[index]->rotationMatrix() ) ) ) );
-        result = (*m_primitives)[index]->intersect( ray );
-        if ( ( result < distance ) && result > 0.0 )
+        ray.setDirection( new QVector3D( ray.direction() *
+                                          m_primitives[index]->rotationMatrix() ) );
+        m_primitives[index]->intersect( ray, result );
+        if ( result.hit && result.distance < info.distance && result.distance > 0.0 )
         {
-            distance = result;
-            primitive = (*m_primitives)[index];
-            image->setPixel( x, y, (*m_primitives)[index]->color().rgb() );
+            info.hit = true;
+            info.distance = result.distance;
+            info.primitive = m_primitives[index];
         }
         ++index;
     }
-    if ( !primitive )
-        return;
-    qreal cosinus = 0.0;
-    QVector3D* intersect = new QVector3D( *ray->origin() + distance * *ray->realDirection() );
-    QVector3D* normal = primitive->normal( intersect );
-    QVector3D* realNormal = new QVector3D( (*normal) * (primitive->rotationMatrix()->inverted()) );
-    QVector3D* lightVector = NULL;
-    delete normal;
-    for ( index = 0, counter = m_lights->count(); index < counter; ++index )
-    {
-        lightVector = new QVector3D( ( * ( *m_lights )[index]->position() ) - ( *intersect ) );
-        cosinus = QVector3D::dotProduct( *realNormal, *ray->direction() ) /
-                  ( realNormal->length() * lightVector->length() );
-        if ( QVector3D::dotProduct( *realNormal, *ray->direction() ) )
-            cosinus = -cosinus;
-        if ( cosinus > 1.0 )
-            cosinus = 1.0;
-        if ( cosinus < ZERO )
-            continue;
-        /*if ( QVector3D::dotProduct( *normal, *normal ) <= ZERO )
-            continue;
-        QVector3D* dist = new QVector3D( *(*m_lights)[index]->position() - *intersect );
-        if ( sqrt( QVector3D::dotProduct( *normal, *dist ) ) <= ZERO )
-            continue;
-        Ray* lightRay = new Ray( new QVector3D( *intersect ),
-                                 new QVector3D( 1.0 / sqrt( QVector3D::dotProduct( *dist, *dist ) ) * ( *dist )  ) );
-        double lambert = QVector3D::dotProduct( *lightRay->direction(), *normal ) * 1.0;
-        qDebug() << *lightRay->direction() << *normal;*/
-        //qDebug() << cosinus << primitive->color();
-        QColor color(QColor::Rgb);
-        /*if ( dynamic_cast<Plan*>(primitive) )
-            qDebug() << primitive->color().blue() << cosinus * 100;*/
+}
 
-        color.setRed( primitive->color().red() * cosinus * (*m_lights)[index]->color().red() );
-        color.setGreen( primitive->color().green() * cosinus * (*m_lights)[index]->color().green() );
-        color.setBlue( primitive->color().blue() * cosinus * (*m_lights)[index]->color().blue() );
-        //qDebug() << cosinus;
-        image->setPixel( x, y, color.rgb() );
-    }
+void    Scene::renderLight( Ray& ray, IntersectionInfo& info )
+{
+    info.position = new QVector3D( ray.origin() + ray.direction() * info.distance );
+    info.normal =
 }

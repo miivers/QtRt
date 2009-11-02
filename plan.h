@@ -32,7 +32,7 @@ class Plan : public Primitive
 public:
     Plan( qreal xPos, qreal yPos, qreal zPos );
 
-    qreal       intersect( Ray* ray );
+    void        intersect( Ray& ray, IntersectionInfo& info );
     QVector3D*  normal( QVector3D* intersect );
 };
 

@@ -35,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->actionRender, SIGNAL(triggered()), this, SLOT(renderScene()));
-    //renderScene();
 }
 
 MainWindow::~MainWindow()
