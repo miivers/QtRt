@@ -35,7 +35,7 @@ public:
     void        intersect( Ray& ray, IntersectionInfo& info );
     QVector3D*  normal( QVector3D* intersect );
 private:
-    qreal   m_rayon;
+    qreal       m_rayon;
 };
 
 #endif // SPHERE_H

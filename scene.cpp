@@ -129,5 +129,5 @@ void    Scene::getFirstIntersect( Ray& ray, IntersectionInfo& info )
 void    Scene::renderLight( Ray& ray, IntersectionInfo& info )
 {
     info.position = new QVector3D( ray.origin() + ray.direction() * info.distance );
-    info.normal =
+    //info.normal =
 }

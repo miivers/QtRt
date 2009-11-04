@@ -42,17 +42,17 @@ public:
                qreal xRotation, qreal yRotation, qreal zRotation );
     virtual ~Primitive();
 
-    virtual void    intersect( Ray& ray, IntersectionInfo& info ) = 0;
-    const QVector3D* position() { return m_position; }
-    QColor          color() const { return m_color; }
-    const QString   name() const { return m_name; }
-    virtual QVector3D*      normal( QVector3D* intersect ) = 0;
-    QMatrix4x4&     rotationMatrix();
+    virtual void        intersect( Ray& ray, IntersectionInfo& info ) = 0;
+    const QVector3D*    position() { return m_position; }
+    QColor              color() const { return m_color; }
+    const QString       name() const { return m_name; }
+    virtual QVector3D*  normal( QVector3D* intersect ) = 0;
+    QMatrix4x4&         rotationMatrix();
 protected:
-    QVector3D*      m_position;
-    QMatrix4x4*     m_rotationMatrix;
-    QColor          m_color;
-    QString         m_name;
+    QVector3D*          m_position;
+    QMatrix4x4*         m_rotationMatrix;
+    QColor              m_color;
+    QString             m_name;
 };
 
 #endif // PRIMITIVE_H

@@ -36,8 +36,8 @@ public:
     const QVector3D*    position() const { return m_position; }
     QColor              color() { return m_color; }
 private:
-    QVector3D*   m_position;
-    QColor m_color;
+    QVector3D*          m_position;
+    QColor              m_color;
 };
 
 #endif // LIGHT_H

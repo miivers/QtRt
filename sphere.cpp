@@ -40,15 +40,9 @@ Sphere::~Sphere()
 
 void Sphere::intersect( Ray& ray, IntersectionInfo& info )
 {
-    qreal a = pow( ray.direction().x(), 2 ) +
-              pow( ray.direction().y(), 2 ) +
-              pow( ray.direction().z(), 2 );
-    qreal b = 2.0 * ( ray.origin().x() * ray.direction().x() +
-                    ray.origin().y() * ray.direction().y() +
-                    ray.origin().z() * ray.direction().z() );
-    qreal c = pow( ray.origin().x(), 2 ) +
-              pow( ray.origin().y(), 2 ) +
-              pow( ray.origin().z(), 2 ) - pow( m_rayon, 2 );
+    qreal a = QVector3D::dotProduct( ray.direction(), ray.direction() );
+    qreal b = QVector3D::dotProduct( 2 * ray.origin(), ray.direction() );
+    qreal c = QVector3D::dotProduct( ray.origin(), ray.origin() ) - m_rayon * m_rayon;
     qreal delta = pow( b, 2 ) - 4.0 * a * c;
     if ( delta >= ZERO )
     {

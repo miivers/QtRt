@@ -34,11 +34,11 @@ public:
     IntersectionInfo();
     ~IntersectionInfo();
 
-    bool hit;
-    Primitive* primitive;
-    QVector3D* position;
-    QVector3D* normal;
-    qreal distance;
+    bool        hit;
+    Primitive*  primitive;
+    QVector3D*  position;
+    QVector3D*  normal;
+    qreal       distance;
 };
 
 #endif // INTERSECTIONINFO_H
